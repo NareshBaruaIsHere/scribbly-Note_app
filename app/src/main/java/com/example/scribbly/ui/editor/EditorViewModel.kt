@@ -24,6 +24,14 @@ data class EditorUiState(
     val createdAt: Long = System.currentTimeMillis()
 )
 
+internal fun resolveTitleForSave(state: EditorUiState): String {
+    return if (state.id == null && state.title.isBlank() && state.content.isNotBlank()) {
+        state.content.lines().firstOrNull { it.isNotBlank() }?.take(30) ?: ""
+    } else {
+        state.title
+    }
+}
+
 class EditorViewModel(
     private val noteRepository: NoteRepository
 ) : ViewModel() {
@@ -114,13 +122,7 @@ class EditorViewModel(
 
     private suspend fun saveNote() {
         val currentState = _uiState.value
-        
-        // Auto-generate title from first line if empty and we have content
-        val finalTitle = if (currentState.title.isBlank() && currentState.content.isNotBlank()) {
-            currentState.content.lines().firstOrNull { it.isNotBlank() }?.take(30) ?: ""
-        } else {
-            currentState.title
-        }
+        val finalTitle = resolveTitleForSave(currentState)
 
         if (finalTitle.isBlank() && currentState.content.isBlank()) {
             // Don't save completely empty notes
