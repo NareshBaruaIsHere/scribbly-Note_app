@@ -52,10 +52,11 @@ class HomeViewModelTest {
             )
         )
         val settingsRepository = createSettingsRepository()
-        val viewModel = HomeViewModel(NoteRepository(noteDao), settingsRepository)
+        val sortModeFlow = MutableStateFlow(SortMode.UPDATED_AT)
+        val viewModel = HomeViewModel(NoteRepository(noteDao), settingsRepository, sortModeFlow)
 
         val collector = backgroundScope.launch { viewModel.uiState.collect { } }
-        settingsRepository.updateSortMode(SortMode.TITLE_A_Z)
+        sortModeFlow.value = SortMode.TITLE_A_Z
         advanceUntilIdle()
 
         assertEquals(listOf(3L, 2L, 1L), viewModel.uiState.value.notes.map { it.note.id })
@@ -71,10 +72,10 @@ class HomeViewModelTest {
             )
         )
         val settingsRepository = createSettingsRepository()
-        val viewModel = HomeViewModel(NoteRepository(noteDao), settingsRepository)
+        val sortModeFlow = MutableStateFlow(SortMode.UPDATED_AT)
+        val viewModel = HomeViewModel(NoteRepository(noteDao), settingsRepository, sortModeFlow)
 
         val collector = backgroundScope.launch { viewModel.uiState.collect { } }
-        settingsRepository.updateSortMode(SortMode.UPDATED_AT)
         viewModel.onSearchQueryChange("meet")
         advanceUntilIdle()
 

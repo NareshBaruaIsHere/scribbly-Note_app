@@ -8,6 +8,7 @@ import com.example.scribbly.data.preferences.SortMode
 import com.example.scribbly.data.repository.NoteRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -25,7 +26,8 @@ data class HomeUiState(
 
 class HomeViewModel(
     private val noteRepository: NoteRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val sortModeFlow: Flow<SortMode> = settingsRepository.sortModeFlow
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -44,7 +46,7 @@ class HomeViewModel(
         _notesFlow,
         _searchQuery,
         _selectedNotes,
-        settingsRepository.sortModeFlow
+        sortModeFlow
     ) { notes, query, selected, sortMode ->
         val sortedNotes = when (sortMode) {
             SortMode.UPDATED_AT -> notes.sortedByDescending { it.note.updatedAt }
