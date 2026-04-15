@@ -2,6 +2,7 @@ package com.example.scribbly.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -19,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -191,18 +194,34 @@ fun NoteCard(
 ) {
     val neumorphicColors = LocalNeumorphicColors.current
     val note = noteWithLabels.note
+    val cardShape = RoundedCornerShape(16.dp)
+    val selectedContainerColor = if (isSelected) {
+        if (neumorphicColors.isLight) {
+            neumorphicColors.background.copy(alpha = 0.92f)
+        } else {
+            neumorphicColors.shadowDark.copy(alpha = 0.7f)
+        }
+    } else {
+        neumorphicColors.background
+    }
+    val selectionAccent = if (neumorphicColors.isLight) Color(0xFF4F46E5) else Color(0xFF8B5CF6)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .neumorphicSurface(
-                shape = RoundedCornerShape(16.dp),
+                shape = cardShape,
                 cornerRadius = 16.dp,
                 lightShadowColor = neumorphicColors.shadowLight,
                 darkShadowColor = neumorphicColors.shadowDark,
-                surfaceColor = if (isSelected) neumorphicColors.shadowDark.copy(alpha = 0.5f) else neumorphicColors.background,
-                shadowElevation = if (isSelected) 2.dp else 6.dp,
+                surfaceColor = selectedContainerColor,
+                shadowElevation = if (isSelected) 1.dp else 6.dp,
                 isPressed = isSelected
+            )
+            .border(
+                width = if (isSelected) 2.dp else 0.dp,
+                color = if (isSelected) selectionAccent else Color.Transparent,
+                shape = cardShape
             )
             .combinedClickable(
                 onClick = onClick,
@@ -226,6 +245,15 @@ fun NoteCard(
                         contentDescription = "Pinned",
                         tint = neumorphicColors.text.copy(alpha = 0.7f),
                         modifier = Modifier.size(16.dp)
+                    )
+                }
+                if (isSelected) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        Icons.Filled.CheckCircle,
+                        contentDescription = "Selected",
+                        tint = selectionAccent,
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
