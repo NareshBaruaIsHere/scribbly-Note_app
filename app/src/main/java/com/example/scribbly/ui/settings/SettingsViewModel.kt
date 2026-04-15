@@ -10,7 +10,6 @@ import com.example.scribbly.data.preferences.ThemeMode
 import com.example.scribbly.data.repository.NoteRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -45,8 +44,7 @@ class SettingsViewModel(
 
     fun exportNotes(context: Context, uri: Uri) {
         viewModelScope.launch {
-            val allNotes = noteRepository.getAllActiveNotes().first()
-            noteRepository.exportNotesToJson(context, uri, allNotes)
+            noteRepository.exportAllNotesToJson(context, uri)
         }
     }
 

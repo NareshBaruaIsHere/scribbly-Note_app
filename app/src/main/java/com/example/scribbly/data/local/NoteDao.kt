@@ -17,6 +17,12 @@ interface NoteDao {
     @Update
     suspend fun updateNote(note: NoteEntity)
 
+    @Query("UPDATE notes SET isArchived = :isArchived, updatedAt = :updatedAt WHERE id = :noteId")
+    suspend fun updateArchivedState(noteId: Long, isArchived: Boolean, updatedAt: Long)
+
+    @Query("UPDATE notes SET isDeleted = :isDeleted, updatedAt = :updatedAt WHERE id = :noteId")
+    suspend fun updateDeletedState(noteId: Long, isDeleted: Boolean, updatedAt: Long)
+
     @Delete
     suspend fun deleteNote(note: NoteEntity)
     
@@ -43,9 +49,19 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :noteId")
     fun getNoteById(noteId: Long): Flow<NoteWithLabels?>
 
+    @Query("SELECT * FROM notes WHERE id = :noteId LIMIT 1")
+    suspend fun getNoteEntityById(noteId: Long): NoteEntity?
+
+    @Transaction
+    @Query("SELECT * FROM notes WHERE isDeleted = 0")
+    suspend fun getAllNotesForBackup(): List<NoteWithLabels>
+
     // Label Operations
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLabel(label: LabelEntity): Long
+
+    @Query("SELECT id FROM labels WHERE name = :name LIMIT 1")
+    suspend fun getLabelIdByName(name: String): Long?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNoteLabelCrossRef(crossRef: NoteLabelCrossRef)

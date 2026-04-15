@@ -1,14 +1,11 @@
 package com.example.scribbly.ui.archive
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.scribbly.ScribblyApp
-import com.example.scribbly.data.local.NoteEntity
 import com.example.scribbly.data.local.NoteWithLabels
 import com.example.scribbly.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +48,7 @@ class ArchiveViewModel(
             val selected = _selectedNotes.value
             val toUnarchive = archiveState.value.notes.filter { it.note.id in selected }
             toUnarchive.forEach {
-                noteRepository.updateNote(it.note.copy(isArchived = false, updatedAt = System.currentTimeMillis()))
+                noteRepository.archiveNote(it.note.id, isArchived = false)
             }
             clearSelection()
         }
@@ -62,7 +59,7 @@ class ArchiveViewModel(
             val selected = _selectedNotes.value
             val toDelete = archiveState.value.notes.filter { it.note.id in selected }
             toDelete.forEach {
-                noteRepository.updateNote(it.note.copy(isDeleted = true, updatedAt = System.currentTimeMillis()))
+                noteRepository.softDeleteNote(it.note.id)
             }
             clearSelection()
         }

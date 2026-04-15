@@ -33,6 +33,7 @@ import java.util.Date
 fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToEditor: (Long?) -> Unit,
+    onNavigateToArchive: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -76,6 +77,9 @@ fun HomeScreen(
                         actionIconContentColor = neumorphicColors.text
                     ),
                     actions = {
+                        IconButton(onClick = onNavigateToArchive) {
+                            Icon(Icons.Default.Archive, contentDescription = "Archive")
+                        }
                         IconButton(onClick = onNavigateToSettings) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }

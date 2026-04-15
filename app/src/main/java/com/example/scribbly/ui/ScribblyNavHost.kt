@@ -32,6 +32,9 @@ fun ScribblyNavHost() {
                         navController.navigate("editor/-1") // Use -1 for new note
                     }
                 },
+                onNavigateToArchive = {
+                    navController.navigate("archive")
+                },
                 onNavigateToSettings = {
                     navController.navigate("settings")
                 }

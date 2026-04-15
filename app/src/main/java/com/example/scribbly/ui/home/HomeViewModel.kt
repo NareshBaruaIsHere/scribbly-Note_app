@@ -2,7 +2,6 @@ package com.example.scribbly.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.scribbly.data.local.NoteEntity
 import com.example.scribbly.data.local.NoteWithLabels
 import com.example.scribbly.data.preferences.SettingsRepository
 import com.example.scribbly.data.preferences.SortMode
@@ -84,7 +83,7 @@ class HomeViewModel(
             val selected = _selectedNotes.value
             val notesToDelete = uiState.value.notes.filter { it.note.id in selected }
             notesToDelete.forEach {
-                noteRepository.updateNote(it.note.copy(isDeleted = true, updatedAt = System.currentTimeMillis()))
+                noteRepository.softDeleteNote(it.note.id)
             }
             clearSelection()
         }
@@ -95,7 +94,7 @@ class HomeViewModel(
             val selected = _selectedNotes.value
             val notesToArchive = uiState.value.notes.filter { it.note.id in selected }
             notesToArchive.forEach {
-                noteRepository.updateNote(it.note.copy(isArchived = true, updatedAt = System.currentTimeMillis()))
+                noteRepository.archiveNote(it.note.id, isArchived = true)
             }
             clearSelection()
         }
