@@ -1,4 +1,4 @@
-# Scribbly
+# Scribbly..
 
 Scribbly is an Android notes app built with Jetpack Compose, Room, and DataStore.
 
