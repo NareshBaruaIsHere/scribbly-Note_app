@@ -10,7 +10,7 @@ This is an Android notes app built with Jetpack Compose, Room, and DataStore.
 - Theme and preference settings with DataStore
 - JSON backup and restore
 
-## Tech Stack.
+## Tech Stack..!
 
 - Kotlin
 - Jetpack Compose
