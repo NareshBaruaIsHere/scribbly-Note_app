@@ -2,7 +2,7 @@
 
 This is an Android notes app built with Jetpack Compose, Room, and DataStore.
 
-## Features.
+## Features..!
 
 - Create, edit, archive, and delete notes
 - Search and sort notes
@@ -18,7 +18,7 @@ This is an Android notes app built with Jetpack Compose, Room, and DataStore.
 - DataStore Preferences
 - Navigation Compose
 
-## Run.
+## Run..!
 
 ```zsh
 ./gradlew :app:assembleDebug
